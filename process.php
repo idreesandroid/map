@@ -23,11 +23,7 @@ if(isset($_REQUEST['CompleteMapData'])){
     ]);
      
     $account_id = $database->id();
-
-
-
-
-
+    
     $sql = 'INSERT INTO google_map(description) VALUES ('.$desc.') ';
 
     if ($conn->query($sql) === TRUE) {
