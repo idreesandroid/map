@@ -6,7 +6,7 @@ use Medoo\Medoo;
 
 $database = new Medoo([
     'database_type' => 'mysql',
-    'database_name' => 'milkman',
+    'database_name' => 'google_map_db',
     'server' => 'localhost',
     'username' => 'root',
     'password' => ''
@@ -18,7 +18,7 @@ $database = new Medoo([
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Simple Map</title>
+    <title>Google Map Customization</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>  
     <script src="script.js"></script>  
@@ -89,7 +89,7 @@ $database = new Medoo([
             dataType: "json"            
         });		  
   	});
-    google.maps.event.addDomListener(byId('restore'), 'click', function(){
+    google.maps.event.addDomListener(byId('restore1'), 'click', function(){
       if(this.shapes){
         for(var i=0;i<this.shapes.length;++i){
               this.shapes[i].setMap(null);
@@ -241,7 +241,10 @@ function getMap(){
 	var id = jQuery("#getMap").val();
 	jQuery.ajax({
       url: 'process.php',  
-      data: {id : id, type : 'getMap' },
+      data: {
+          id : id,
+          type : 'getMap'
+          },
       type: 'post',
       async: false,
       success: function (msg) {
@@ -260,23 +263,19 @@ function getMap(){
   <!-- <input id="save_encoded" value="save encoded(IO.IN(shapes,true))" type="button" /> -->
   <!-- <input id="save_raw_map" value="save raw(IO.IN(shapes,false))" type="button" /> -->
   <input type="button" id="save_raw_map" value="save">
-  <input id="data" value="" style="width:100%" readonly />
-  <!-- <input id="restore" value="restore(IO.OUT(array,map))" type="button" /> -->
-  <input id="restore" value="restore" type="button" />
+  <input id="data" value="" style="width:100%" />
+  <!-- <input id="restore1" value="restore1(IO.OUT(array,map))" type="button" />  -->
+  <input id="restore1" value="restore1" type="button" />
 <?php
 
 
-$data = $database->select('users', [
-    'name',
-    'email',
-    'id'
-],['id' > 5]);
+$data = $database->select('google_map', '*');
 
 ?>
   <select id="getMap" name="mapId" onchange="getMap()">
   	<?php foreach($data as $item) { $count++;?>  		
   	
-  	<option value="<?= $item['id'];?>"><?= $item['name'];?></option>
+  	<option value="<?= $item['id'];?>"><?= $item['id'];?></option>
   	<?php } ?>
   </select>
 </div>
