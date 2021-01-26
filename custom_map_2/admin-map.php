@@ -3,7 +3,8 @@
 include_once 'header.php';
 include_once 'locations_model.php';
 ?>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&key=AIzaSyA4d_ChkEg7E_k9rU7zPt09FVPGKpL1aAE&v=3&callback=initMap"></script>
 
 <div id="map"></div>
 
@@ -52,33 +53,23 @@ include_once 'locations_model.php';
     function saveData() {
         var confirmed = document.getElementById('confirmed').checked ? 1 : 0;
         var id = document.getElementById('id').value;
-        var url = 'locations_model.php?confirm_location&id=' + id + '&confirmed=' + confirmed ;
-        downloadUrl(url, function(data, responseCode) {
-            if (responseCode === 200  && data.length > 1) {
-                infowindow.close();
-                window.location.reload(true);
-            }else{
+        $.ajax({
+            url : "locations_model.php",
+            type: "POST",
+            data: {
+               'id' : id,
+               'confirmed' : confirmed,
+               'confirm_location' : true
+            },           
+            success : function(response, status) {              
+               infowindow.close();
+               window.location.reload(true);
+             },
+            error: function(){
                 infowindow.setContent("<div style='color: purple; font-size: 25px;'>Inserting Errors</div>");
             }
-        });
+         });
     }
-
-
-    function downloadUrl(url, callback) {
-        var request = window.ActiveXObject ?
-            new ActiveXObject('Microsoft.XMLHTTP') :
-            new XMLHttpRequest;
-
-        request.onreadystatechange = function() {
-            if (request.readyState == 4) {
-                callback(request.responseText, request.status);
-            }
-        };
-
-        request.open('GET', url, true);
-        request.send(null);
-    }
-
 
 </script>
 
@@ -98,8 +89,7 @@ include_once 'locations_model.php';
     </table>
 </div>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&key=AIzaSyA4d_ChkEg7E_k9rU7zPt09FVPGKpL1aAE&v=3&callback=initMap"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
 <?php
 
 include_once 'footer.php';

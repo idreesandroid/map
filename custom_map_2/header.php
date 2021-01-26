@@ -22,9 +22,6 @@
 </style>
 
 
-
-
-
 <body>
 
     <a href="https://localhost/map/custom_map_2/user-map.php">User Map</a> | <a href="https://localhost/map/custom_map_2/admin-map.php">Admin Map</a>

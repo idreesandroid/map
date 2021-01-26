@@ -4,8 +4,14 @@ include_once 'header.php';
 include_once 'locations_model.php';
 ?>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?v=beta&libraries=geometry,drawing,places&key=AIzaSyA4d_ChkEg7E_k9rU7zPt09FVPGKpL1aAE&v=3&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&key=AIzaSyA4d_ChkEg7E_k9rU7zPt09FVPGKpL1aAE&v=3&callback=initMap"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<?php
+
+
+//get_confirmed_locations();
+
+ ?>
 <div id="map"></div>   
 <script>
     /**
@@ -152,40 +158,67 @@ include_once 'locations_model.php';
      * @param lat  A latitude of marker.
      * @param lng A longitude of marker.
      */
-    function saveData(lat,lng) {
-        var description = document.getElementById('manual_description').value;
-        var url = 'locations_model.php?add_location&description=' + description + '&lat=' + lat + '&lng=' + lng;
-        downloadUrl(url, function(data, responseCode) {
-            if (responseCode === 200  && data.length > 1) {
-                var markerId = getMarkerUniqueId(lat,lng); // get marker id by using clicked point's coordinate
-                var manual_marker = markers[markerId]; // find marker
-                manual_marker.setIcon(purple_icon);
-                infowindow.close();
-                infowindow.setContent("<div style=' color: purple; font-size: 25px;'> Waiting for admin confirm!!</div>");
-                infowindow.open(map, manual_marker);
 
-            }else{
-                console.log(responseCode);
-                console.log(data);
+     function saveData(lat,lng) {
+        var description = document.getElementById('manual_description').value;
+        $.ajax({
+            url : "locations_model.php",
+            type: "POST",
+            data: {
+               'lat' : lat,
+               'lng' : lng,
+               'description' : description,
+               'add_location' : true
+            },           
+            success : function(response, status) {              
+               var markerId = getMarkerUniqueId(lat,lng); // get marker id by using clicked point's coordinate
+               var manual_marker = markers[markerId]; // find marker
+               manual_marker.setIcon(purple_icon);
+               infowindow.close();
+               infowindow.setContent("<div style=' color: purple; font-size: 25px;'> Waiting for admin confirm!!</div>");
+               infowindow.open(map, manual_marker);
+             },
+            error: function(){
                 infowindow.setContent("<div style='color: red; font-size: 25px;'>Inserting Errors</div>");
             }
-        });
+         });
     }
 
-    function downloadUrl(url, callback) {
-        var request = window.ActiveXObject ?
-            new ActiveXObject('Microsoft.XMLHTTP') :
-            new XMLHttpRequest;
 
-        request.onreadystatechange = function() {
-            if (request.readyState == 4) {
-                callback(request.responseText, request.status);
-            }
-        };
+    // function saveData(lat,lng) {
+    //     var description = document.getElementById('manual_description').value;
+    //     var url = 'locations_model.php?add_location&description=' + description + '&lat=' + lat + '&lng=' + lng;
+    //     downloadUrl(url, function(data, responseCode) {
+    //         if (responseCode === 200  && data.length > 1) {
+    //             var markerId = getMarkerUniqueId(lat,lng); // get marker id by using clicked point's coordinate
+    //             var manual_marker = markers[markerId]; // find marker
+    //             manual_marker.setIcon(purple_icon);
+    //             infowindow.close();
+    //             infowindow.setContent("<div style=' color: purple; font-size: 25px;'> Waiting for admin confirm!!</div>");
+    //             infowindow.open(map, manual_marker);
 
-        request.open('GET', url, true);
-        request.send(null);
-    }
+    //         }else{
+    //             console.log(responseCode);
+    //             console.log(data);
+    //             infowindow.setContent("<div style='color: red; font-size: 25px;'>Inserting Errors</div>");
+    //         }
+    //     });
+    // }
+
+    // function downloadUrl(url, callback) {
+    //     var request = window.ActiveXObject ?
+    //         new ActiveXObject('Microsoft.XMLHTTP') :
+    //         new XMLHttpRequest;
+
+    //     request.onreadystatechange = function() {
+    //         if (request.readyState == 4) {
+    //             callback(request.responseText, request.status);
+    //         }
+    //     };
+
+    //     request.open('GET', url, true);
+    //     request.send(null);
+    // }
 
 
 </script>
