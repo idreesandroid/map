@@ -6,8 +6,14 @@ include_once 'locations_model.php';
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&key=AIzaSyA4d_ChkEg7E_k9rU7zPt09FVPGKpL1aAE&v=3&callback=initMap"></script>
 
-<div id="map"></div>
+<?php 
 
+$location = get_all_locations();
+
+print_r($location);
+
+ ?>
+<div id="map"></div>
 <!------ Include the above in your HEAD tag ---------->
 <script>
     var map;
@@ -15,7 +21,7 @@ include_once 'locations_model.php';
     var infowindow;
     var red_icon =  'http://maps.google.com/mapfiles/ms/icons/red-dot.png' ;
     var purple_icon =  'http://maps.google.com/mapfiles/ms/icons/purple-dot.png' ;
-    var locations = <?php get_all_locations() ?>;
+    var locations = <?php get_all_locations(); ?>;
 
     function initMap() {
         var france = {lat: 46.87916, lng: -3.32910};
@@ -72,6 +78,9 @@ include_once 'locations_model.php';
     }
 
 </script>
+
+
+
 
 <div style="display: none" id="form">
     <table class="map1">
